@@ -154,12 +154,12 @@ jobs:
           github_token: ${{ secrets.ORGANIZATION_TOKEN }}
           message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
 
-      - name: Clonar repositório de destino https://github.com/voidlinuxbr/void-install.git
-        shell: bash
-        run: |
-          pushd "${{ env.WORK_PATH }}"
-          git clone --depth=1 https://github.com/voidlinuxbr/void-install.git
-          popd
+    - name: Clonar repositório de destino https://github.com/voidlinuxbr/void-install.git
+      shell: bash
+      run: |
+        pushd "${{ env.WORK_PATH }}"
+        git clone --depth=1 https://x-access-token:${{ secrets.ORGANIZATION_TOKEN }}@github.com/voidlinuxbr/void-install.git
+        popd
 
       - name: Empurrar mudanças para o repositório de destino
         shell: bash
