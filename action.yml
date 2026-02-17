@@ -38,6 +38,9 @@ inputs:
   github_token:
     description: "GitHub token for authentication"
     required: true
+  message_thread_id:
+    description: "Telegram message thread id"
+    required: false
 
 outputs:
   iso_path:

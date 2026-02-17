@@ -25,7 +25,7 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
-name: Build ROOTFS VoidLinux
+name: Build ROOTFS VoidBR
 
 # Gatilhos para o workflow
 on:
@@ -91,7 +91,6 @@ jobs:
     steps:
       - name: Obter nome do repositório
         id: get-repo-name
-        #run: echo "repo_name=$(basename $GITHUB_REPOSITORY)" >> $GITHUB_OUTPUT
         #run: echo "::set-output name=repo_name::$(basename $GITHUB_REPOSITORY)"
         run: echo "repo_name=$(basename "$GITHUB_REPOSITORY")" >> "$GITHUB_OUTPUT"
 
