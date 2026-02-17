@@ -69,8 +69,7 @@ env:
   triggered_by_user: "${{ github.triggering_actor }}"
   DEBUG: "${{ github.event.client_payload.tmate || inputs.tmate || false }}"
   tmate: "${{ github.event.client_payload.tmate || inputs.tmate || false }}"
-
-
+  iso_distroname: "${{ github.event.client_payload.distroname || inputs.distroname || 'voidBR' }}"
 
 jobs:
   setup:
