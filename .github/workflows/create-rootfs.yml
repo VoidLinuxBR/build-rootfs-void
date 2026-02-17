@@ -106,7 +106,7 @@ jobs:
 
       - name: Create user builduser
         run: |
-          useradd -m -G wheel,audio,video,cdrom,optical,kvm,xbuilder builduser
+          useradd -m -G wheel,audio,video,cdrom,optical,kvm,xbuilder builduser || true
 
       - name: Display the current user in container
         run: |
