@@ -82,6 +82,18 @@ jobs:
         id: time
         run: echo "time=$(date +'%Y.%m.%d-%H%M')" >> "$GITHUB_OUTPUT"
 
+      - name: Capturar hora de início do workflow
+        id: start-time
+        shell: bash
+        run: |
+          START_TIME=$(date +"%Y-%m-%d %H:%M:%S")  # Hora completa
+          START_TIMESTAMP=$(date +%s)  # Timestamp em segundos
+          echo "Início do Workflow: $START_TIME"
+          echo "START_TIME=$START_TIME"             >> $GITHUB_ENV
+          echo "START_TIMESTAMP=$START_TIMESTAMP"   >> $GITHUB_ENV
+          echo "START_TIME='$START_TIME'"           >> shared_file.txt
+          echo "START_TIMESTAMP='$START_TIMESTAMP'" >> shared_file.txt
+
   # Job para definir o nome do repositório
   set-repo-name:
     runs-on: ubuntu-latest
@@ -100,10 +112,10 @@ jobs:
           echo "ISO_BRANCH='$iso_branch'" >> shared_file.txt
           link_action=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
 
-          MESSAGE="🚀 <b>[step 1/3] build-iso-void - INICIANDO WORKFLOW</b>
+          MESSAGE="🚀 <b>[step 1/3] build-rootfs-void - INICIANDO WORKFLOW</b>
           <b>Job:</b> <code>#${GITHUB_RUN_NUMBER}</code>
           <b>Job URL:</b> <a href='https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}'>${link_action}</a>
-          <b>Workflow:</b> <code>build-iso-void/create-iso.yml</code>
+          <b>Workflow:</b> <code>build-rootfs-void/create-rootfs.yml</code>
           <b>Iniciado/Triggered:</b> <code>${started_by_user}/${triggered_by_user}</code>
           <b>Inicio:</b> <code>${{ env.START_TIME }}</code>
           <b>Distroname:</b> <code>${iso_distroname}</code>
