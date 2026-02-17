@@ -80,7 +80,7 @@ jobs:
     steps:
       - name: Obter a hora atual
         id: time
-#       run: echo "::set-output name=time::$(date +'%Y.%m.%d-%H%M')"
+        #run: echo "::set-output name=time::$(date +'%Y.%m.%d-%H%M')"
         run: echo "{time}={$(date +'%Y.%m.%d-%H%M')}" >> $GITHUB_OUTPUT
 
   # Job para definir o nome do repositório
