@@ -1,6 +1,5 @@
 #  Altered: 2024/12/26 - 12:26
 #  Updated: ter 17 fev 2026 16:06:14 -04
-#  Version: 1.3.6
 #
 #  Copyright (c) 2024-2025, Vilmar Catafesta <vcatafesta@gmail.com>
 #  All rights reserved.
@@ -222,10 +221,10 @@ runs:
     - name: Configurar o ambiente
       shell: bash
       run: |
-        WORK_PATH="${{ github.workspace }}"
-        PROFILE_PATH="${{ github.workspace }}/chili-void-mklive"
-        echo "WORK_PATH=$WORK_PATH"       >> "$GITHUB_ENV"
-        echo "PROFILE_PATH=$PROFILE_PATH" >> "$GITHUB_ENV"
+        WORK_PATH="/__w/${{env.REPO_NAME}}/${{env.REPO_NAME}}"
+        PROFILE_PATH="/__w/${{env.REPO_NAME}}/${{env.REPO_NAME}}/chili-void-mklive"
+        echo "WORK_PATH=$WORK_PATH"       >> "$GITHUB_ENV"  # Exporta WORK_PATH para outras etapas
+        echo "PROFILE_PATH=$PROFILE_PATH" >> "$GITHUB_ENV"  # Exporta WORK_PATH para outras etapas
 
     - name: Checkout chili-void-mklive
       shell: bash
@@ -288,6 +287,9 @@ runs:
           msg_raw "WORK_PATH                : $WORK_PATH"
           msg_raw "PROFILE_PATH             : $PROFILE_PATH"
           msg_raw "ISO profiles path        : $PROFILE_PATH/$EDITION"
+          #replicate "#"
+          #msg_raw "ROOT_RUN_DIR             : $(< /root/.config/manjaro-tools/iso-profiles.conf)"
+          #msg_raw "BUILDUSER_RUN_DIR        : $(< /home/builduser/.config/manjaro-tools/iso-profiles.conf)"
           replicate "#"
 
           pushd "$PROFILE_PATH" > /dev/null || true
@@ -301,10 +303,10 @@ runs:
           ISO_BASENAME=$(basename "$OUTPUT_ISO_PATH_NAME")
           XZ_BASENAME=$(basename "$OUTPUT_XZ_PATH_NAME")
 
-          echo "OUTPUT_ISO_PATH_NAME=$OUTPUT_ISO_PATH_NAME" >> "$GITHUB_ENV"
-          echo "OUTPUT_XZ_PATH_NAME=$OUTPUT_XZ_PATH_NAME" >> "$GITHUB_ENV"
-          echo "ISO_BASENAME=$ISO_BASENAME" >> "$GITHUB_ENV"
-          echo "XZ_BASENAME=$XZ_BASENAME" >> "$GITHUB_ENV"
+          echo "OUTPUT_ISO_PATH_NAME=$OUTPUT_ISO_PATH_NAME" >> "$GITHUB_ENV"  # Exporta OUTPUT_ISO_PATH_NAME para outras etapas
+          echo "OUTPUT_XZ_PATH_NAME=$OUTPUT_XZ_PATH_NAME" >> "$GITHUB_ENV"    # Exporta OUTPUT_ISO_PATH_NAME para outras etapas
+          echo "ISO_BASENAME=$ISO_BASENAME" >> "$GITHUB_ENV"                  # Exporta OUTPUT_ISO_PATH_NAME para outras etapas
+          echo "XZ_BASENAME=$XZ_BASENAME" >> "$GITHUB_ENV"                    # Exporta OUTPUT_ISO_PATH_NAME para outras etapas
 
           if [[ -n "$OUTPUT_ISO_PATH_NAME" ]]; then
             mv -fv "$OUTPUT_ISO_PATH_NAME" "$WORK_PATH/" || echo "ERRO: Falha ao mover arquivo ISO $OUTPUT_ISO_PATH_NAME"
