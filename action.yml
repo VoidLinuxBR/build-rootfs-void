@@ -66,12 +66,12 @@ runs:
         export TERM=${TERM:-xterm-256color}
 
         #Definindo variáveis de cores
-        export red="\033[01;31m"
         export green="\033[01;32m"
-        export yellow="\033[01;33m"
+        export red="\033[01;31m"
         export blue="\033[01;34m"
-        export pink="\033[01;35m"
         export cyan="\033[01;36m"
+        export pink="\033[01;35m"
+        export yellow="\033[01;33m"
         export reset="\033[0m"
         alias ls='ls -lha --color=auto'
         alias dir='ls -lha --color=auto'
