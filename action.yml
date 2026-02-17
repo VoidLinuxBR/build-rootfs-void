@@ -24,8 +24,8 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
-name: "Build rootfs VoidLinux"
-description: "Builds a tarball rootfs image for VoidLinux"
+name: "Build rootfs VoidBR"
+description: "Builds a tarball rootfs image for VoidBR"
 
 inputs:
   name:
@@ -196,6 +196,14 @@ runs:
         # Setup build environment
         source /tmp/send_telegram_message.sh
         {
+        echo 'repository=https://void.voidbr.org/voidlinux/current'
+        echo 'repository=https://void.voidbr.org/voidlinux/extra'
+        echo 'repository=https://void.voidbr.org/voidlinux/current/nonfree'
+        echo 'repository=https://void.voidbr.org/voidlinux/current/multilib'
+        echo 'repository=https://void.voidbr.org/voidlinux/current/multilib/nonfree'
+        echo
+        echo 'repository=https://void.chililinux.com/voidlinux/current'
+        echo
         echo 'repository=https://repo-fastly.voidlinux.org/current'
         echo 'repository=https://repo-fastly.voidlinux.org/current/nonfree'
         echo 'repository=https://repo-fastly.voidlinux.org/current/multilib'
