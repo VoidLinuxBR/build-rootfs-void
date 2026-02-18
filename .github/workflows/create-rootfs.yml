@@ -49,6 +49,7 @@ env:
   triggered_by_user: "${{ github.triggering_actor }}"
   iso_distroname: "${{ github.event.client_payload.distroname || inputs.distroname || 'voidBR' }}"
   edition: "${{ github.event.client_payload.edition || inputs.edition || 'custom' }}"
+  rootfs_name: "void-x86_64-base-${{ github.event.client_payload.edition || inputs.edition || 'custom' }}-current.tar.xz"
 
 jobs:
   setup:
@@ -65,13 +66,17 @@ jobs:
         run: |
           link_action=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
           MESSAGE="🚀 <b>[step 1/3] build-rootfs-void - INICIANDO WORKFLOW</b>
-          <b>Job:</b> <code>#${GITHUB_RUN_NUMBER}</code>
-          <b>Job URL:</b> <a href='${link_action}'>${link_action}</a>
-          <b>Workflow:</b> <code>build-rootfs-void/create-rootfs.yml</code>
-          <b>Iniciado/Triggered:</b> <code>${started_by_user}/${triggered_by_user}</code>
-          <b>Distroname:</b> <code>${iso_distroname}</code>
-          <b>Edition:</b> <code>${edition}</code>"
-          
+          <b>Job        :</b> <code>#${GITHUB_RUN_NUMBER}</code>
+          <b>Job URL    :</b> <a href='${link_action}'>${link_action}</a>
+          <b>Workflow   :</b> <code>build-rootfs-void/create-rootfs.yml</code>
+          <b>Started/Triggered:</b> <code>${started_by_user}/${triggered_by_user}</code>
+          <b>Started     :</b> <code>${START_T}</code>
+          <b>Distroname :</b> <code>${iso_distroname}</code>
+          <b>Edition    :</b> <code>${edition}</code>
+          <b>Kernel     :</b> <code>${iso_kernel}</code>
+          <b>Tmate      :</b> <code>${{ env.DEBUG }}</code>
+          <b>FileName   :</b> <code>${rootfs_name}</code>"
+
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
             -d chat_id="${CHAT_ID}" \
             -d message_thread_id="${MESSAGE_THREAD_ID}" \
@@ -159,6 +164,7 @@ jobs:
         shell: bash
         env:
           D_URL: "https://github.com/${{ github.repository }}/releases/download/${{ env.XZ_TAG_NAME }}/${{ env.XZ_BASENAME }}"
+          FILE_NAME: ${{ env.XZ_BASENAME }}
           START_T: ${{ env.S_TIME_HUMAN }}
           START_TS: ${{ env.S_TIMESTAMP }}
         run: |
@@ -166,36 +172,36 @@ jobs:
           DURATION=$((END_TS - START_TS))
           MIN=$((DURATION / 60))
           SEC=$((DURATION % 60))
-          
+
           FILE_SIZE="N/A"
           if [[ -f "${{ env.XZ_FULLNAME }}" ]]; then
             FILE_SIZE=$(du -h "${{ env.XZ_FULLNAME }}" | cut -f1)
           fi
-          
+
           STATUS="${{ job.status }}"
           if [[ "$STATUS" == "success" ]]; then
             EMOJI="✅"
             TEXT_STATUS="CONCLUÍDO COM SUCESSO"
-            DOWNLOAD_LINK="<a href='${D_URL}'>Direto .tar.xz</a>"
+            DOWNLOAD_LINK="<a href='${D_URL}'>${FILE_NAME}</a>"
           else
             EMOJI="❌"
             TEXT_STATUS="FALHOU"
             DOWNLOAD_LINK="N/A"
           fi
-          
+
           link_action=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
-          
+
           MESSAGE="${EMOJI} <b>[step 3/3] build-rootfs-void - ${TEXT_STATUS}</b>
           <b>Job        :</b> <code>#${GITHUB_RUN_NUMBER}</code>
           <b>Job URL    :</b> <a href='${link_action}'>${link_action}</a>
           <b>Edition    :</b> <code>${edition}</code>
-          <b>Inicio     :</b> <code>${START_T}</code>
-          <b>Duração    :</b> <code>${MIN}m ${SEC}s</code>
+          <b>Started    :</b> <code>${START_T}</code>
+          <b>Duration   :</b> <code>${MIN}m ${SEC}s</code>
           <b>Status     :</b> <code>${STATUS}</code>
           <b>Download   :</b> ${DOWNLOAD_LINK}
           <b>Tamanho    :</b> <code>${FILE_SIZE}</code>
           <b>URL        :</b> <a href='${link_action}'>Ver Detalhes</a>"
-          
+
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
             -d chat_id="${CHAT_ID}" \
             -d message_thread_id="${MESSAGE_THREAD_ID}" \
