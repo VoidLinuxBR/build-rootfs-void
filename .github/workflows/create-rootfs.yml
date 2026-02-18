@@ -137,11 +137,10 @@ jobs:
 
       - name: Capturar dados da Imagem
         run: |
-          # Contar Pacotes do ROOTFS
-          PKG_COUNT=$(xbps-query -r "${{ env.WORK_PATH }}/rootfs" -l | wc -l)
+          # 1. Contar Pacotes do ROOTFS (usando -r para olhar dentro da imagem criada)
+          PKG_COUNT=$(xbps-query -r "${{ env.WORK_PATH }}/rootfs" -l 2>/dev/null | wc -l || echo "0")
           echo "TOTAL_PACKAGES=${PKG_COUNT}" >> $GITHUB_ENV
-          # Pega a versão do pacote linux instalado no rootfs
-          # Usamos awk para pegar a versão limpa (ex: 6.6.15_1)
+          # 2. Pega a versão do pacote linux instalado no rootfs
           K_VER=$(xbps-query -r "${{ env.WORK_PATH }}/rootfs" -p version linux 2>/dev/null || echo "n/a")
           echo "REAL_KERNEL=${K_VER}" >> $GITHUB_ENV
 
