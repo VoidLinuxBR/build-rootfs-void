@@ -1,2 +1,2 @@
 # build-rootfs
-Build rootfs tarball
+Build rootfs tarball for VoidBR
