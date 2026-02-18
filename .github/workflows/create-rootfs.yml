@@ -86,7 +86,7 @@ jobs:
         run: |
           # Enviar notificação inicial para o Telegram
           link_action=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
-          MESSAGE="🚀 <b>[step 1/3] build-rootfs-void - INICIANDO WORKFLOW</b>
+          MESSAGE="🚀 <b>[step 1/2] build-rootfs-void - INICIANDO WORKFLOW</b>
           <b>Job         :</b> <code>#${GITHUB_RUN_NUMBER}</code>
           <b>Job URL     :</b> <a href='${link_action}'>${link_action}</a>
           <b>Workflow    :</b> <code>build-rootfs-void/create-rootfs.yml</code>
@@ -140,7 +140,8 @@ jobs:
       - name: Capturar dados da Imagem
         run: |
           # 1. Contar Pacotes do ROOTFS (usando -r para olhar dentro da imagem criada)
-          PKG_COUNT=$(xbps-query -r "${{ env.WORK_PATH }}/base-custom" -l 2>/dev/null | wc -l || echo "0")
+          #PKG_COUNT=$(xbps-query -r "${{ env.WORK_PATH }}/base-custom" -l 2>/dev/null | wc -l || echo "0")
+          PKG_COUNT=$(xbps-query -r base-custom -l | wc -l || echo "0")
           echo "TOTAL_PACKAGES=${PKG_COUNT}" >> $GITHUB_ENV
           # 2. Pega a versão do pacote linux instalado no rootfs
           K_VER=$(xbps-query -r "${{ env.WORK_PATH }}/rootfs" -p version linux 2>/dev/null || echo "n/a")
@@ -227,7 +228,7 @@ jobs:
 
           link_action=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
           DISK_FREE=$(df -h / | awk 'NR==2 {print $4}')
-          MESSAGE="${EMOJI} <b>[step 3/3] build-rootfs-void - ${TEXT_STATUS}</b>
+          MESSAGE="${EMOJI} <b>[step 2/2] build-rootfs-void - ${TEXT_STATUS}</b>
           <b>Job         :</b> <code>#${GITHUB_RUN_NUMBER}</code>
           <b>Job URL     :</b> <a href='${link_action}'>${link_action}</a>
           <b>Edition     :</b> <code>${edition}</code>
