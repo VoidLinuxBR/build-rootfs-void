@@ -148,7 +148,7 @@ jobs:
           echo "TOTAL_PACKAGES=${PKG_COUNT}" >> $GITHUB_ENV
 
           # 2. Pega a versão do pacote linux instalado no rootfs real
-          K_VER=$(xbps-query -r "$TARGET_ROOT" -p version linux 2>/dev/null || echo "n/a")
+          K_VER=$(xbps-query -r "$TARGET_ROOT" -p version linux 2>/dev/null || echo "na")
           echo "REAL_KERNEL=${K_VER}" >> $GITHUB_ENV
 
           # 3. Pega o kernel do container
@@ -236,12 +236,12 @@ jobs:
           MESSAGE="${EMOJI} <b>[step 2/2] build-rootfs-void - ${TEXT_STATUS}</b>
           <b>Job         :</b> <code>#${GITHUB_RUN_NUMBER}</code>
           <b>Job URL     :</b> <a href='${link_action}'>${link_action}</a>
-          <b>Edition     :</b> <code>${edition}</code>
-          <b>Kernel      :</b> <code>x86_64/${{env.CONTAINER_KERNEL}}</code>
-          <b>Kernel      :</b> <code>x86_64/${{env.REAL_KERNEL}}</code>
-          <b>Started     :</b> <code>${START_T}</code>
-          <b>Duration    :</b> <code>${MIN}m ${SEC}s</code>
           <b>Status      :</b> <code>${STATUS}</code>
+          <b>Started     :</b> <code>${START_T}</code>
+          <b>Started/Triggered:</b> <code>${started_by_user}/${triggered_by_user}</code>
+          <b>Edition     :</b> <code>${edition}</code>
+          <b>Kernel      :</b> <code>${{env.REAL_KERNEL}}</code>
+          <b>Duration    :</b> <code>${MIN}m ${SEC}s</code>
           <b>MD5         :</b> <code>${{ env.MD5_VAL }}</code>
           <b>Download    :</b> ${DOWNLOAD_LINK}
           <b>Size        :</b> <code>${FILE_SIZE}</code>
