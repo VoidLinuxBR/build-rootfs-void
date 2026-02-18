@@ -47,6 +47,8 @@ env:
   MESSAGE_THREAD_ID: "${{ secrets.MESSAGE_THREAD_ID }}"
   started_by_user: "${{ github.actor }}"
   triggered_by_user: "${{ github.triggering_actor }}"
+  DEBUG: "${{ github.event.client_payload.tmate || inputs.tmate || false }}"
+  tmate: "${{ github.event.client_payload.tmate || inputs.tmate || false }}"
   iso_distroname: "${{ github.event.client_payload.distroname || inputs.distroname || 'voidBR' }}"
   edition: "${{ github.event.client_payload.edition || inputs.edition || 'custom' }}"
   rootfs_name: "void-x86_64-base-${{ github.event.client_payload.edition || inputs.edition || 'custom' }}-current.tar.xz"
@@ -60,6 +62,18 @@ jobs:
       - name: Obter a hora atual
         id: time
         run: echo "time=$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_OUTPUT
+
+      - name: Capturar hora de início do workflow
+        id: start-time
+        shell: bash
+        run: |
+          START_TIME=$(date +"%Y-%m-%d %H:%M:%S")  # Hora completa
+          START_TIMESTAMP=$(date +%s)  # Timestamp em segundos
+          echo "Início do Workflow: $START_TIME"
+          echo "START_TIME=$START_TIME"             >> $GITHUB_ENV
+          echo "START_TIMESTAMP=$START_TIMESTAMP"   >> $GITHUB_ENV
+          echo "START_TIME='$START_TIME'"           >> shared_file.txt
+          echo "START_TIMESTAMP='$START_TIMESTAMP'" >> shared_file.txt
 
       - name: Enviar notificação para o Telegram
         shell: bash
