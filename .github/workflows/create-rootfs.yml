@@ -135,6 +135,11 @@ jobs:
           github_token: ${{ secrets.ORGANIZATION_TOKEN }}
           message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
 
+      - name: Contar Pacotes do ROOTFS
+        run: |
+          PKG_COUNT=$(xbps-query -r "${{ env.WORK_PATH }}/rootfs" -l | wc -l)
+          echo "TOTAL_PACKAGES=${PKG_COUNT}" >> $GITHUB_ENV
+
       - name: Calculate MD5 Hash
         shell: bash
         run: |
@@ -222,7 +227,8 @@ jobs:
           <b>Download   :</b> ${DOWNLOAD_LINK}
           <b>Tamanho    :</b> <code>${FILE_SIZE}</code>
           <b>MD5        :</b> <code>${{ env.MD5_VAL }}</code>
-          <b>Disk free  :</b> <code>${DISK_FREE}</code>"
+          <b>Disk free  :</b> <code>${DISK_FREE}</code>
+          <b>Packages   :</b> <code>${TOTAL_PACKAGES}</code>"
 
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
             -d chat_id="${CHAT_ID}" \
