@@ -45,6 +45,7 @@ env:
   GITHUB_TOKEN: "${{ secrets.ORGANIZATION_TOKEN }}"
   CHAT_ID: "${{ secrets.CHAT_ID }}"
   MESSAGE_THREAD_ID: "${{ secrets.MESSAGE_THREAD_ID }}"
+  MESSAGE_THREAD_ID_ROOTFS: "${{ secrets.MESSAGE_THREAD_ID_ROOTFS }}"
   started_by_user: "${{ github.actor }}"
   triggered_by_user: "${{ github.triggering_actor }}"
   DEBUG: "${{ github.event.client_payload.tmate || inputs.tmate || false }}"
@@ -98,7 +99,7 @@ jobs:
 
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
             -d chat_id="${CHAT_ID}" \
-            -d message_thread_id="${MESSAGE_THREAD_ID}" \
+            -d message_thread_id="${MESSAGE_THREAD_ID_ROOTFS}" \
             -d text="${MESSAGE}" \
             -d parse_mode="HTML"
 
@@ -133,7 +134,7 @@ jobs:
           name: ${{ github.event.client_payload.name || inputs.name }}
           tmate: ${{ github.event.client_payload.tmate || 'false' }}
           github_token: ${{ secrets.ORGANIZATION_TOKEN }}
-          message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
+          message_thread_id_rootfs: ${{ secrets.MESSAGE_THREAD_ID_ROOTFS }}
 
       - name: Capturar dados da Imagem
         run: |
@@ -241,6 +242,6 @@ jobs:
 
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
             -d chat_id="${CHAT_ID}" \
-            -d message_thread_id="${MESSAGE_THREAD_ID}" \
+            -d message_thread_id="${MESSAGE_THREAD_ID_ROOTFS}" \
             -d text="${MESSAGE}" \
             -d parse_mode="HTML"
