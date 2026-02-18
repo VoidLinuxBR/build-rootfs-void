@@ -213,6 +213,7 @@ jobs:
         shell: bash
         env:
           D_URL: "https://github.com/${{ github.repository }}/releases/download/${{ env.XZ_TAG_NAME }}/${{ env.XZ_BASENAME }}"
+          P_URL: "https://github.com/${{ github.repository }}/releases/download/${{ env.XZ_TAG_NAME }}/${{ env.PKG_LIST_FILE }}"
           FILE_NAME: ${{ env.XZ_BASENAME }}
           PKG_FILE: ${{ env.PKG_LIST_FILE }}
           START_T: ${{ env.S_TIME_HUMAN }}
