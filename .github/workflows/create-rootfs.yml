@@ -75,9 +75,9 @@ jobs:
           echo "START_TIME='$START_TIME'"           >> shared_file.txt
           echo "START_TIMESTAMP='$START_TIMESTAMP'" >> shared_file.txt
 
-      - name: Pegar Versão do Kernel
+      - name: Pegar Versão do Kernel do Host (ubuntu)
         run: |
-          KVER=$(uname -r)
+          KVER=$(uname -a)
           echo "KERNEL_VERSION=${KVER}" >> $GITHUB_ENV
 
       - name: Enviar notificação para o Telegram
@@ -92,7 +92,7 @@ jobs:
           <b>Started     :</b> <code>${START_TIME}</code>
           <b>Distroname  :</b> <code>${iso_distroname}</code>
           <b>Edition     :</b> <code>${edition}</code>
-          <b>Arch/Kernel :</b> <code>x86_64/${KERNEL_VERSION}</code>
+          <b>Kernel Host :</b> <code>x86_64/${KERNEL_VERSION}</code>
           <b>Tmate       :</b> <code>${{ env.DEBUG }}</code>
           <b>FileName    :</b> <code>${rootfs_name}</code>"
 
