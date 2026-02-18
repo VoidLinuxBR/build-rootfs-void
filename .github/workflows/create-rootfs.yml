@@ -1,8 +1,8 @@
 #  create-rootfs.yml
 #  Created: 2024/09/15 - 08:10
-#  Altered: qua 20 nov 2024 10:00:22 -04
+#  Altered: ter 17 fev 2026 20:12:31 -04
 #
-#  Copyright (c) 2024-2024, Vilmar Catafesta <vcatafesta@gmail.com>
+#  Copyright (c) 2024-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -117,11 +117,9 @@ jobs:
           <b>Inicio:</b> <code>${START_TIME}</code>
           <b>Distroname:</b> <code>${iso_distroname}</code>
           <b>Edition:</b> <code>${edition}</code>
-          <b>Build dir:</b> <code>${iso_build_dir}</code>
-          <b>Release:</b> <code>${iso_release_tag}</code>
           <b>Kernel:</b> <code>${iso_kernel}</code>
           <b>Tmate:</b> <code>${{ env.DEBUG }}</code>
-          <b>ISO Name:</b> <code>void-live-${iso_edition}-x86_64_${iso_release_tag}</code>"
+          <b>ROOTFS Name:</b> <code>${{ env.XZ_FULLNAME }} </code>"
           # Remove as tags HTML e exibe o resultado no terminal
           echo -e "${green}$(sed 's/<[^>]*>//g' <<< "$MESSAGE")${reset}"
           # Envia a mensagem original com HTML para o Telegram
