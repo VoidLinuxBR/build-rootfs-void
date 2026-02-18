@@ -83,7 +83,6 @@ jobs:
         id: time
         run: |
           #Obter a hora atual
-          #echo "::set-output name=time::$(date +'%Y.%m.%d-%H%M')"
           echo "time=$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_OUTPUT
 
       - name: Capturar hora de início do workflow
