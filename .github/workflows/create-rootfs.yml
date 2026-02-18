@@ -345,7 +345,8 @@ jobs:
         shell: bash
         run: |
           pushd "${{ env.WORK_PATH }}"
-          git clone --depth=1 https://github.com/voidlinuxbr/void-install.git
+          #git clone --depth=1 https://github.com/voidlinuxbr/void-install.git
+          git clone --depth=1 https://x-access-token:${{ secrets.ORGANIZATION_TOKEN }}@github.com/voidlinuxbr/void-install.git
           popd
 
       - name: Copiar arquivo .tar.gz para o repositório de destino
