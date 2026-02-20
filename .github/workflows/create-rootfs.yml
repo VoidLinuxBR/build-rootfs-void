@@ -90,7 +90,7 @@ jobs:
           MESSAGE="🚀 <b>[step 1/2] build-rootfs-void - INICIANDO WORKFLOW</b>
           <b>Job         :</b> <code>#${GITHUB_RUN_NUMBER}</code>
           <b>Job URL     :</b> <a href='${link_action}'>${link_action}</a>
-          <b>Workflow    :</b> <code>build-rootfs-void/create-rootfs.yml</code>
+          <b>Workflow    :</b> <code>${{ github.workflow }}</code>
           <b>Started/Triggered:</b> <code>${started_by_user}/${triggered_by_user}</code>
           <b>Started     :</b> <code>${START_TIME}</code>
           <b>Distroname  :</b> <code>${iso_distroname}</code>
