@@ -262,12 +262,7 @@ jobs:
           echo "S_TIME_HUMAN=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
           echo "S_TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
 
-      - name: Install Required Libraries
-        run: |
-          xbps-install -Syu xbps
-          xbps-install -Syu xtools bash sudo openssh tmate xz zip kmod ncurses which vpm libstdc++ nano curl git tree duf
-
-      - name: Checkout repository
+      - name: Checkout repository (voidbr-build-rootfs)
         uses: actions/checkout@v4
         with:
           fetch-depth: 1

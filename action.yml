@@ -78,11 +78,11 @@ runs:
         ls -la /mnt || true
         replicate "#"
 
-    - name: Setup build environment
+    - name: Setup build environment - Install Required Libraries
       shell: bash
       run: |
         source /tmp/send_telegram_message.sh
-        msg "- name: Setup build environment"
+        msg "- name: Setup build environment - Install Required Libraries"
         replicate
         {
         echo 'repository=https://void.voidbr.org/voidlinux/current'
@@ -100,8 +100,8 @@ runs:
         } >> /etc/xbps.d/00-repository-main.conf
 
         msg_info "atualizar e instalar pacotes adicionais"
-        xbps-install -Sy -u xbps      || true
-        xbps-install tree duf  || true
+        xbps-install -Syu xbps || true
+        xbps-install -Syu xtools bash sudo openssh tmate xz zip kmod ncurses which vpm libstdc++ nano curl git tree duf || true
 
     - name: Definir REPO_NAME
       shell: bash
