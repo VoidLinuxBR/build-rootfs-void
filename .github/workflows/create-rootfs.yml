@@ -107,6 +107,14 @@ jobs:
           alias ls='ls -lha --color=auto'
           alias dir='ls -lha --color=auto'
 
+          die() {
+            local msg="$1"
+            msg="$(sed 's/<[^>]*>//g' <<< "$msg")" # Remove as tags HTML
+            echo -e "BP=>${cyan}error: ${red}${msg}${reset}"
+            exit  1
+          }
+          export -f die
+
           msg() {
             local msg="$1"
             msg="$(sed 's/<[^>]*>//g' <<< "$msg")" # Remove as tags HTML
@@ -121,9 +129,43 @@ jobs:
 
           msg_raw() {
             local msg="$1"
-            msg="$(sed 's/<[^>]*>//g' <<< "$msg")" # Remove as tags HTML
-            echo -e "${cyan}${msg}${reset}"
+            # Remove tags HTML, se existirem
+            #msg="$(sed 's/<[^>]*>//g' <<< "$msg")"
+
+            # Verifica se existe ':' na mensagem
+            if [[ "$msg" == *:* ]]; then
+              # Divide a string antes e depois do primeiro ':'
+              local before_colon="${msg%%:*}:"
+              local after_colon="${msg#*: }"
+              # Aplica as cores
+              msg="${cyan}${before_colon} ${yellow}${after_colon}${reset}"
+            else
+              # Se não houver ':', aplica apenas a cor padrão
+              msg="${cyan}${msg}${reset}"
+            fi
+            echo -e "$msg"
           }
+          export -f msg_raw
+
+          msg_ok() {
+            local msg="$1"
+            msg="$(sed 's/<[^>]*>//g' <<< "$msg")" # Remove as tags HTML
+            echo -e "BP=>${cyan}feito  : ${green}${msg}${reset}"
+          }
+          export -f msg_ok
+
+          msg_run() {
+            local msg="$1"
+            echo -e "BP=>${cyan}running: ${yellow}${msg}${reset}"
+
+            # Executa o comando e captura o código de saída
+            if ! eval "$msg"; then
+              echo -e "BP=>${red}Erro ao executar: ${yellow}${msg}${reset}" >&2
+              return 1
+            fi
+            return 0
+          }
+          export -f msg_run
 
           msg_info() {
             local msg="$1"
