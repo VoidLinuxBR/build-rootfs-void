@@ -318,7 +318,7 @@ jobs:
           github_token: ${{ secrets.ORGANIZATION_TOKEN }}
           message_thread_id_rootfs: ${{ secrets.MESSAGE_THREAD_ID_ROOTFS }}
 
-      - name: Capturar dados da Imagem
+      - name: Capturar dados da tarball rootfs gerado
         run: |
           # O rootfs é construído dentro da pasta da edição (ex: base-custom)
           #TARGET_ROOT="${{ env.WORK_PATH }}/${{ env.edition }}"
