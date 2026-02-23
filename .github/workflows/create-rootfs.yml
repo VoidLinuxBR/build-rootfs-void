@@ -280,7 +280,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [setup]
     container:
-      image: vcatafesta/voidlinux-docker:1.5
+      #image: vcatafesta/voidlinux-docker:1.5
+      image: vcatafesta/voidlinux:1.5           # seg 23 fev 2026 11:55:31 -04
       options: --privileged
       volumes:
         - /mnt/var_lib_manjaro_tools_buildiso:/var/lib/manjaro-tools/buildiso
