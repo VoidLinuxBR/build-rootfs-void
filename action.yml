@@ -79,12 +79,12 @@ runs:
         replicate "#"
 
     - name: Install Required Packages and Libraries no CONTAINER
-        shell: bash
-        run: |
-          source /tmp/send_telegram_message.sh
-          replicate
-          msg "- name: Install Required Packages and Libraries no CONTAINER"
-          {
+      shell: bash
+      run: |
+        source /tmp/send_telegram_message.sh
+        replicate
+        msg "- name: Install Required Packages and Libraries no CONTAINER"
+        {
           echo 'repository=https://void.voidbr.org/voidlinux/current'
           echo 'repository=https://void.voidbr.org/voidlinux/extra'
           echo 'repository=https://void.voidbr.org/voidlinux/current/nonfree'
