@@ -452,9 +452,8 @@ jobs:
           link_action=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
           DISK_FREE=$(df -h / | awk 'NR==2 {print $4}')
           MESSAGE="${{ github.workflow }} ${EMOJI} <b>[step 2/2] - ${TEXT_STATUS}</b>
-          <b>Job           :</b> <code>#${GITHUB_RUN_NUMBER}</code>
-          <b>Job URL       :</b> <a href='${link_action}'>${link_action}</a>
-          <b>Workflow file :</b> <code>create-rootfs.yml</code>
+          <b>Job           :</b> <a href='${link_action}'>#${GITHUB_RUN_NUMBER}</a>
+          <b>Workflow file :</b> <a href='${wf_url}'>${wf_file}</a>
           <b>Status        :</b> <code>${STATUS}</code>
           <b>Started       :</b> <code>${START_T}</code>
           <b>Triggered     :</b> <code>${started_by_user}/${triggered_by_user}</code>
