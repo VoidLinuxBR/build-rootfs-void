@@ -201,7 +201,7 @@ jobs:
             MESSAGE="${{ github.workflow }} - $message
             <b>Job           :</b> <code>#${GITHUB_RUN_NUMBER}</code>
             <b>Job URL       :</b> <a href='${link_action}'>${link_action}</a>
-            <b>Workflow file :</b> <a href='${url_workflow}'>create-rootfs.yml</a>
+            <b>Workflow file :</b> <a href='${url_workflow}'>${url_workflow}</a>
             <b>Triggered     :</b> <code>${started_by_user}/${triggered_by_user}</code>
             <b>Started       :</b> <code>${START_TIME}</code>
             <b>Distroname    :</b> <code>${iso_distroname}</code>
