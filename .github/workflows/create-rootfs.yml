@@ -54,6 +54,8 @@ env:
   iso_distroname: "${{ github.event.client_payload.distroname || inputs.distroname || 'voidBR' }}"
   edition: "${{ github.event.client_payload.edition || inputs.edition || 'base-custom' }}"
   rootfs_name: "void-x86_64-${{ github.event.client_payload.edition || inputs.edition || 'base-custom' }}-current.tar.xz"
+  wf_url: "https://github.com/${{ github.repository }}/blob/main/.github/workflows/create-rootfs.yml"
+  wf_file: "create-rootfs.yml"
 
 jobs:
   setup:
@@ -189,6 +191,21 @@ jobs:
           }
           export -f replicate
 
+          function send_telegram_msg() {
+            local message="$1"
+            local parse_mode="$2"
+
+            # Remove as tags HTML e exibe o resultado no terminal
+            echo -e "${green}$(sed 's/<[^>]*>//g' <<< "$MESSAGE")${reset}"
+            # Envia a mensagem original com HTML para o Telegram
+            curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_VOIDBR_ROOTFS_TOKEN_BOT}/sendMessage" \
+              -d chat_id="${CHAT_ID}" \
+              -d message_thread_id="${MESSAGE_THREAD_ID_ROOTFS}" \
+              -d text="${MESSAGE}" \
+              -d parse_mode="HTML"
+          }
+          export -f send_telegram_msg
+
           function send_telegram_message() {
             local message="$1"
             local parse_mode="$2"
@@ -198,16 +215,15 @@ jobs:
 
             link_action=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
             MESSAGE="${{ github.workflow }} - $message
-            <b>Job         :</b> <code>#${GITHUB_RUN_NUMBER}</code>
-            <b>Job URL     :</b> <a href='${link_action}'>${link_action}</a>
-            <b>Workflow    :</b> <code>${{ github.workflow }}</code>
-            <b>Started/Triggered:</b> <code>${started_by_user}/${triggered_by_user}</code>
-            <b>Started     :</b> <code>${START_TIME}</code>
-            <b>Distroname  :</b> <code>${iso_distroname}</code>
-            <b>Edition     :</b> <code>${edition}</code>
-            <b>Kernel Host :</b> <code>x86_64/${KERNEL_HOST}</code>
-            <b>Tmate       :</b> <code>${{ env.DEBUG }}</code>
-            <b>FileName    :</b> <code>${rootfs_name}</code>"
+            <b>Job           :</b> <a href='${link_action}'>#${GITHUB_RUN_NUMBER}</a>
+            <b>Workflow file :</b> <a href='${wf_url}'>${wf_file}</a>
+            <b>Triggered     :</b> <code>${started_by_user}/${triggered_by_user}</code>
+            <b>Started       :</b> <code>${START_TIME}</code>
+            <b>Distroname    :</b> <code>${iso_distroname}</code>
+            <b>Edition       :</b> <code>${edition}</code>
+            <b>Kernel Host   :</b> <code>x86_64/${KERNEL_HOST}</code>
+            <b>Tmate         :</b> <code>${{ env.DEBUG }}</code>
+            <b>FileName      :</b> <code>${rootfs_name}</code>"
 
             # Remove as tags HTML e exibe o resultado no terminal
             echo -e "${green}$(sed 's/<[^>]*>//g' <<< "$MESSAGE")${reset}"
@@ -280,7 +296,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [setup]
     container:
-      image: vcatafesta/voidlinux-docker:1.5
+      #image: vcatafesta/voidlinux-docker:1.5
+      image: vcatafesta/voidlinux:1.5 # seg 23 fev 2026 11:55:31 -04
       options: --privileged
       volumes:
         - /mnt/var_lib_manjaro_tools_buildiso:/var/lib/manjaro-tools/buildiso
@@ -318,7 +335,7 @@ jobs:
           github_token: ${{ secrets.ORGANIZATION_TOKEN }}
           message_thread_id_rootfs: ${{ secrets.MESSAGE_THREAD_ID_ROOTFS }}
 
-      - name: Capturar dados da Imagem
+      - name: Capturar dados da tarball rootfs gerado
         run: |
           # O rootfs é construído dentro da pasta da edição (ex: base-custom)
           #TARGET_ROOT="${{ env.WORK_PATH }}/${{ env.edition }}"
@@ -423,7 +440,9 @@ jobs:
           START_T: ${{ env.S_TIME_HUMAN }}
           START_TS: ${{ env.S_TIMESTAMP }}
         run: |
-          # Enviar notificação final para o Telegram
+          source /tmp/send_telegram_message.sh
+          replicate
+          msg 'Enviar notificação final para o Telegram'
           END_TS=$(date +%s)
           DURATION=$((END_TS - START_TS))
           MIN=$((DURATION / 60))
@@ -450,22 +469,18 @@ jobs:
           link_action=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
           DISK_FREE=$(df -h / | awk 'NR==2 {print $4}')
           MESSAGE="${{ github.workflow }} ${EMOJI} <b>[step 2/2] - ${TEXT_STATUS}</b>
-          <b>Job         :</b> <code>#${GITHUB_RUN_NUMBER}</code>
-          <b>Job URL     :</b> <a href='${link_action}'>${link_action}</a>
-          <b>Status      :</b> <code>${STATUS}</code>
-          <b>Started     :</b> <code>${START_T}</code>
-          <b>Started/Triggered:</b> <code>${started_by_user}/${triggered_by_user}</code>
-          <b>Edition     :</b> <code>${edition}</code>
-          <b>Kernel      :</b> <code>${{env.REAL_KERNEL}}</code>
-          <b>Duration    :</b> <code>${MIN}m ${SEC}s</code>
-          <b>MD5         :</b> <code>${{ env.MD5_VAL }}</code>
-          <b>Download    :</b> ${DOWNLOAD_LINK}
-          <b>Size        :</b> <code>${FILE_SIZE}</code>
-          <b>Disk free   :</b> <code>${DISK_FREE}</code>
-          <b>Packages    :</b> ${PACKAGES_LINK} (<code>${{ env.TOTAL_PACKAGES }}</code>)"
-
-          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_VOIDBR_ROOTFS_TOKEN_BOT}/sendMessage" \
-            -d chat_id="${CHAT_ID}" \
-            -d message_thread_id="${MESSAGE_THREAD_ID_ROOTFS}" \
-            -d text="${MESSAGE}" \
-            -d parse_mode="HTML"
+          <b>Job           :</b> <a href='${link_action}'>#${GITHUB_RUN_NUMBER}</a>
+          <b>Workflow file :</b> <a href='${wf_url}'>${wf_file}</a>
+          <b>Status        :</b> <code>${STATUS}</code>
+          <b>Started       :</b> <code>${START_T}</code>
+          <b>Triggered     :</b> <code>${started_by_user}/${triggered_by_user}</code>
+          <b>Edition       :</b> <code>${edition}</code>
+          <b>Kernel        :</b> <code>${{env.REAL_KERNEL}}</code>
+          <b>Duration      :</b> <code>${MIN}m ${SEC}s</code>
+          <b>Disk free     :</b> <code>${DISK_FREE}</code>
+          <b>MD5           :</b> <code>${{ env.MD5_VAL }}</code>
+          <b>Download      :</b> ${DOWNLOAD_LINK}
+          <b>Size          :</b> <code>${FILE_SIZE}</code>
+          <b>Packages      :</b> ${PACKAGES_LINK} (<code>${{ env.TOTAL_PACKAGES }}</code>)"
+          send_telegram_msg "$MESSAGE"
+          replicate
